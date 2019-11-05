@@ -1,23 +1,54 @@
 public class TrafficControllerSimple implements TrafficController{
 
+    private TrafficRegistrar registrar;
+    private boolean bridgeFree;
+
+    public TrafficControllerSimple(TrafficRegistrar registrar) {
+        this.registrar = registrar;
+        this.bridgeFree = true;
+    }
 
     @Override
-    public void enterRight(Vehicle v) {
+    public synchronized void enterRight(Vehicle v) {
+
+        while(!bridgeFree){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        registrar.registerRight(v);
+        this.bridgeFree = false;
+    }
+
+    @Override
+    public synchronized void enterLeft(Vehicle v) {
+
+        while(!bridgeFree){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        registrar.registerLeft(v);
+        this.bridgeFree = false;
 
     }
 
     @Override
-    public void enterLeft(Vehicle v) {
-
+    public synchronized void leaveLeft(Vehicle v) {
+        this.bridgeFree = true;
+        registrar.deregisterLeft(v);
+        notify();
     }
 
     @Override
-    public void leaveLeft(Vehicle v) {
-
-    }
-
-    @Override
-    public void leaveRight(Vehicle v) {
-
+    public synchronized void leaveRight(Vehicle v) {
+        this.bridgeFree = true;
+        registrar.deregisterRight(v);
+        notify();
     }
 }

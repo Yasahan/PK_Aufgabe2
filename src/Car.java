@@ -41,6 +41,7 @@ public class Car implements Vehicle, Runnable {
 		this.inFront = inFront;
 		this.image = image;
 		this.controller  = controller;
+
 		if (cartype == REDCAR) 
 			xpos = inFront==null ? outRight : Math.min(initX[cartype],inFront.getX()-90);
 		else 

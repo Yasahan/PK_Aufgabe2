@@ -1,4 +1,5 @@
 public class TrafficControllerEmpty implements TrafficController {
+
 	private TrafficRegistrar registrar;
 	
 	public TrafficControllerEmpty(TrafficRegistrar r) {
